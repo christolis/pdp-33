@@ -118,12 +118,19 @@ void acc_delete(account *root_acc)
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+    FILE *fpIn = fopen((argc > 1 ? argv[1] : "bankacc.in"), "r");
+    FILE *fpOut = fopen("bankacc.out", "w");
+
+    if (!fpIn)
+    {
+        printf("ΣΦΑΛΜΑ: Το αρχείο εισόδου \"%s\" δεν βρέθηκε.\n", argv[1]);
+        exit(1);
+    }
+
     /* root account has ID of -1 */
     account *root_acc = acc_init(-1, 0, 0);
-    FILE *fpIn = fopen("bankacc.in", "r");
-    FILE *fpOut = fopen("bankacc.out", "w");
     char line[MAX_LINE_LENGTH + 1];
     int n;
 
