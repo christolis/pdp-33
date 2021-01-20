@@ -12,7 +12,6 @@ typedef struct account
 {
     struct account *left;
     struct account *right;
-    struct account *parent;
 
     int id;
     int cash;
@@ -25,11 +24,10 @@ typedef struct account
  *  This function is used to initialize any type of node,
  * be it a root node or not.
  */
-account *acc_init(int id, int cash, account *parent)
+account *acc_init(int id, int cash)
 {
     account *acc = (account*) malloc(sizeof(account));
 
-    acc->parent = parent;
     acc->left = NULL;
     acc->right = NULL;
 
@@ -39,8 +37,8 @@ account *acc_init(int id, int cash, account *parent)
 }
 
 /*
- *  Traverses the accounts binary tree to find any account
- * that matches the inputted ID.
+ *  Iteratively traverses the accounts binary tree to find 
+ * any account that matches the inputted ID.
  *
  *  If the function finds no such account, it creates one with
  * an initial cash amount of 0.
@@ -49,36 +47,23 @@ account *acc_search(account *root_acc, int id)
 {
     if (!root_acc)
     {
-        root_acc = acc_init(id, 0, 0);
+        root_acc = acc_init(id, 0);
         return root_acc;
     }
+
     account *walker = root_acc;
 
-    if (id == walker->id)
-        return walker;
+    while (walker && id != walker->id)
+    {
+        if (id > walker->id)
+            walker = walker->right;
+        else
+            walker = walker->left;
 
-    if (id > walker->id)
-    {
-        if (!walker->right)
-        {
-            walker->right = acc_init(id, 0, walker);
-            walker->right->parent = walker;
-            return walker->right;
-        }
-        else
-            return acc_search(walker->right, id);
+        if (!walker)
+            walker = acc_init(id, 0);
     }
-    else
-    {
-        if (!walker->left)
-        {
-            walker->left = acc_init(id, 0, walker);
-            walker->left->parent = walker;
-            return walker->left;
-        }
-        else
-            return acc_search(walker->left, id);
-    }
+    return walker;
 }
 
 /*
@@ -130,7 +115,7 @@ int main(int argc, char *argv[])
     }
 
     /* root account has ID of -1 */
-    account *root_acc = acc_init(-1, 0, 0);
+    account *root_acc = acc_init(-1, 0);
     char line[MAX_LINE_LENGTH + 1];
     int n;
 
@@ -159,7 +144,8 @@ int main(int argc, char *argv[])
                 /* If it doesn't ask for the account's balance, then
                  * it should either ask for a deposit or withdrawal
                  * */
-                default:
+                case 'd':
+                case 'w':
                 {
                     char cmd;
                     unsigned int acc_id, amount;
@@ -177,6 +163,9 @@ int main(int argc, char *argv[])
             }
         }
     }
+
+    //  Delete all of the accounts.
+    acc_delete(root_acc);
 
     fclose(fpIn);
     fclose(fpOut);
