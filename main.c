@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
-    /* root account has ID of -1 */
+    /* Root account has ID of -1 */
     account *root_acc = acc_init(-1, 0);
     char line[MAX_LINE_LENGTH + 1];
     int n;
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
 
                 /* If it doesn't ask for the account's balance, then
                  * it should either ask for a deposit or withdrawal
-                 * */
+                 */
                 case 'd':
                 case 'w':
                 {
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    //  Delete all of the accounts.
+    /* Delete all of the accounts. */
     acc_delete(root_acc);
 
     fclose(fpIn);
