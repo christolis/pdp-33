@@ -6,7 +6,7 @@ This is a repository that contains the solution for the [PDP-33 competition][pdp
 To run this program just execute the following:
 
 ```sh
-$ gcc -std=c99 -O2 -DCONTEST -s -static -lm
+$ gcc -std=c99 -O2 -DCONTEST -s -static -lm main.c
 $ ./a.out
 ```
 
