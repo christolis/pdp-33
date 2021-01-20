@@ -148,17 +148,14 @@ int main(int argc, char *argv[])
                 case 'd':
                 case 'w':
                 {
-                    char cmd;
+                    char cmd, res;
                     unsigned int acc_id, amount;
 
                     sscanf(line, "%c %d %d", &cmd, &acc_id, &amount);
                     amount = (cmd == 'w') ? -amount : amount; /* If withdrawing cash, then we subtract*/
+                    res = acc_add_cash(root_acc, acc_id, amount) ? 's' : 'f';
 
-                    if (acc_add_cash(root_acc, acc_id, amount))
-                        fputs("s\n", fpOut);
-                    else
-                        fputs("f\n", fpOut);
-
+                    fprintf(fpOut, "%c\n", res);
                     break;
                 }
             }
