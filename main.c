@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #define MAX_CASH 1000000000
+#define MAX_TRANSACTIONS 1000000
 #define MAX_LINE_LENGTH 30
 
 typedef struct account 
@@ -122,7 +123,7 @@ int main(int argc, char *argv[])
     /* Read the number of transactions (Number N) */
     fscanf(fpIn, "%d\n", &n); 
 
-    if (n < 1000000)
+    if (n <= MAX_TRANSACTIONS)
     {
         for (int i = 0; i < n; i++)
         {
