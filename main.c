@@ -38,8 +38,8 @@ account *acc_init(int id, int cash)
 }
 
 /*
- *  Iteratively traverses the accounts binary tree to find 
- * any account that matches the inputted ID.
+ *  Iteratively searches through the accounts binary tree to
+ * find any account that matches the inputted ID.
  *
  *  If the function finds no such account, it creates one with
  * an initial cash amount of 0.
