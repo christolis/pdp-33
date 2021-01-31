@@ -15,7 +15,7 @@ typedef struct account
     struct account *right;
 
     int id;
-    int cash;
+    unsigned int cash;
 } account;
 
 /*
@@ -51,18 +51,24 @@ account *acc_search(account *root_acc, int id)
         root_acc = acc_init(id, 0);
         return root_acc;
     }
-
     account *walker = root_acc;
 
     while (walker && id != walker->id)
     {
         if (id > walker->id)
-            walker = walker->right;
-        else
-            walker = walker->left;
+        {
+            if (!walker->right)
+                walker->right = acc_init(id, 0);
 
-        if (!walker)
-            walker = acc_init(id, 0);
+            walker = walker->right;
+        }
+        else
+        {
+            if (!walker->left)
+                walker->left = acc_init(id, 0);
+
+            walker = walker->left;
+        }
     }
     return walker;
 }
@@ -85,7 +91,7 @@ int acc_add_cash(account *root_acc, int id, int amount)
         return 0;
 
     acc->cash += amount;
-    return 1;
+    return new_amount;
 }
 
 /*
@@ -127,36 +133,40 @@ int main(int argc, char *argv[])
     {
         for (int i = 0; i < n; i++)
         {
-            fgets(line, MAX_LINE_LENGTH, fpIn);
-            switch (*line)
+            if (!(fgets(line, MAX_LINE_LENGTH, fpIn)))
+                break;
+            else
             {
-                /* In the case it asks for the account's balance */
-                case 'q':
+                switch (*line)
                 {
-                    unsigned int acc_id;
+                    /* In the case it asks for the account's balance */
+                    case 'q':
+                    {
+                        unsigned int acc_id;
 
-                    sscanf(line, "q %d", &acc_id);
-                    account *acc = acc_search(root_acc, acc_id);
+                        sscanf(line, "q %d", &acc_id);
+                        account *acc = acc_search(root_acc, acc_id);
 
-                    fprintf(fpOut, "%d\n", acc->cash);
-                    break;
-                }
+                        fprintf(fpOut, "%d\n", acc->cash);
+                        break;
+                    }
 
-                /* If it doesn't ask for the account's balance, then
-                 * it should either ask for a deposit or withdrawal
-                 */
-                case 'd':
-                case 'w':
-                {
-                    char cmd, res;
-                    unsigned int acc_id, amount;
+                    /* If it doesn't ask for the account's balance, then
+                     * it should either ask for a deposit or withdrawal
+                     */
+                    case 'd':
+                    case 'w':
+                    {
+                        char cmd, res;
+                        unsigned int acc_id, amount;
 
-                    sscanf(line, "%c %d %d", &cmd, &acc_id, &amount);
-                    amount = (cmd == 'w') ? -amount : amount; /* If withdrawing cash, then we subtract*/
-                    res = acc_add_cash(root_acc, acc_id, amount) ? 's' : 'f';
+                        sscanf(line, "%c %d %d", &cmd, &acc_id, &amount);
+                        amount = (cmd == 'w') ? -amount : amount; /* If withdrawing cash, then we subtract*/
+                        res = acc_add_cash(root_acc, acc_id, amount) ? 's' : 'f';
 
-                    fprintf(fpOut, "%c\n", res);
-                    break;
+                        fprintf(fpOut, "%c\n", res);
+                        break;
+                    }
                 }
             }
         }
