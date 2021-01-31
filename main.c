@@ -121,6 +121,12 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    if (!fpOut)
+    {
+        printf("ΣΦΑΛΜΑ: Το αρχείο εξόδου δεν μπόρεσε να δημιουργηθεί.\n");
+        exit(1);
+    }
+
     /* Root account has ID of -1 */
     account *root_acc = acc_init(-1, 0);
     char line[MAX_LINE_LENGTH + 1];
