@@ -150,10 +150,10 @@ int main(int argc, char *argv[])
                     {
                         unsigned int acc_id;
 
-                        sscanf(line, "q %d", &acc_id);
+                        sscanf(line, "q %u", &acc_id);
                         account *acc = acc_search(root_acc, acc_id);
 
-                        fprintf(fpOut, "%d\n", acc->cash);
+                        fprintf(fpOut, "%u\n", acc->cash);
                         break;
                     }
 
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
                         char cmd, res;
                         unsigned int acc_id, amount;
 
-                        sscanf(line, "%c %d %d", &cmd, &acc_id, &amount);
+                        sscanf(line, "%c %u %u", &cmd, &acc_id, &amount);
                         amount = (cmd == 'w') ? -amount : amount; /* If withdrawing cash, then we subtract*/
                         res = acc_add_cash(root_acc, acc_id, amount) ? 's' : 'f';
 
